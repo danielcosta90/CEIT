@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C.E.I.T. - Controle de Estoque</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      color: #1f2937;
+    }
+
+    header {
+      background: #0f4c81;
+      color: white;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0 0 6px 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.95;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 16px 32px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-resumo {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .card-resumo h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      color: #6b7280;
+      text-transform: uppercase;
+    }
+
+    .card-resumo .numero {
+      font-size: 30px;
+      font-weight: bold;
+      color: #0f4c81;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: #dbe7f3;
+      color: #0f4c81;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .tab-btn.active {
+      background: #0f4c81;
+      color: white;
+    }
+
+    .aba {
+      display: none;
+    }
+
+    .aba.active {
+      display: block;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 450px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .painel {
+      background: white;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
+
+    .painel h2 {
+      margin-top: 0;
+      font-size: 22px;
+      color: #0f4c81;
+    }
+
+    .linha-form {
+      margin-bottom: 12px;
+    }
+
+    .linha-dupla {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cfd8e3;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .acoes-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-primary { background: #0f4c81; color: white; }
+    .btn-success { background: #198754; color: white; }
+    .btn-warning { background: #f59e0b; color: white; }
+    .btn-danger { background: #dc3545; color: white; }
+    .btn-secondary { background: #6b7280; color: white; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #edf2f7;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #eaf2fb;
+      color: #0f4c81;
+    }
+
+    tr:hover td {
+      background: #f9fbfd;
+    }
+
+    .acoes-tabela {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mensagem-global {
+      display: none;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .mensagem-global.sucesso {
+      display: block;
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .mensagem-global.erro {
+      display: block;
+      background: #f8d7da;
+      color: #842029;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .badge.ok {
+      background: #d1e7dd;
+      color: #0f5132;
+    }
+
+    .badge.baixo {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .badge.inativo {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .topo-lista {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .alerta-item {
+      background: #fff3cd;
+      color: #664d03;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1100px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .linha-dupla {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>C.E.I.T. - Controle de Estoque de Informática e Tecnologia</h1>
+    <p>Sistema web integrado ao backend</p>
+  </header>
+
+  <main>
+    <div id="mensagem-global" class="mensagem-global"></div>
+
+    <section class="cards">
+      <div class="card-resumo">
+        <h3>Total de Produtos</h3>
+        <div class="numero" id="resumo-produtos">0</div>
+      </div>
+      <div class="card-resumo">
+        <h3>Total de Categorias</h3>
+        <div class="numero" id="resumo-categorias">0</div>
+      </div>
+      <div class="card-resumo">
+        <h3>Total de Fornecedores</h3>
+        <div class="numero" id="resumo-fornecedores">0</div>
+      </div>
+      <div class="card-resumo">
+        <h3>Itens com Estoque Baixo</h3>
+        <div class="numero" id="resumo-baixo">0</div>
+      </div>
+    </section>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="abrirAba('dashboard', this)">Dashboard</button>
+      <button class="tab-btn" onclick="abrirAba('categorias', this)">Categorias</button>
+      <button class="tab-btn" onclick="abrirAba('fornecedores', this)">Fornecedores</button>
+      <button class="tab-btn" onclick="abrirAba('produtos', this)">Produtos</button>
+      <button class="tab-btn" onclick="abrirAba('movimentacoes', this)">Movimentações</button>
+    </div>
+
+    <section id="aba-dashboard" class="aba active">
+      <div class="grid-2">
+        <div class="painel">
+          <h2>Estoque Baixo</h2>
+          <div id="lista-estoque-baixo">
+            <p class="muted">Carregando...</p>
+          </div>
+        </div>
+
+        <div class="painel">
+          <div class="topo-lista">
+            <h2>Visão Geral dos Produtos</h2>
+            <button class="btn-success" onclick="carregarTudo()">Atualizar Dados</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Cód. Barras</th>
+                <th>Categoria</th>
+                <th>Fornecedor</th>
+                <th>Estoque</th>
+                <th>Mínimo</th>
+                <th>Ativo</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-produtos"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="aba-categorias" class="aba">
+      <div class="grid-2">
+        <div class="painel">
+          <h2 id="titulo-form-categoria">Cadastrar Categoria</h2>
+          <form id="form-categoria">
+            <input type="hidden" id="categoria-id">
+
+            <div class="linha-form">
+              <label for="categoria_nome">Nome</label>
+              <input type="text" id="categoria_nome" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="categoria_descricao">Descrição</label>
+              <textarea id="categoria_descricao" required></textarea>
+            </div>
+
+            <div class="linha-form">
+              <label for="categoria_ativo">Ativo</label>
+              <select id="categoria_ativo" required>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+
+            <div class="acoes-form">
+              <button type="submit" class="btn-primary" id="btn-categoria-salvar">Salvar Categoria</button>
+              <button type="button" class="btn-secondary" onclick="cancelarEdicaoCategoria()" id="btn-categoria-cancelar" style="display:none;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="painel">
+          <div class="topo-lista">
+            <h2>Lista de Categorias</h2>
+            <button class="btn-success" onclick="carregarCategorias()">Atualizar</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-categorias"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="aba-fornecedores" class="aba">
+      <div class="grid-2">
+        <div class="painel">
+          <h2 id="titulo-form-fornecedor">Cadastrar Fornecedor</h2>
+          <form id="form-fornecedor">
+            <input type="hidden" id="fornecedor-id">
+
+            <div class="linha-form">
+              <label for="fornecedor_nome">Nome</label>
+              <input type="text" id="fornecedor_nome" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="fornecedor_cnpj">CNPJ</label>
+              <input type="text" id="fornecedor_cnpj" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="fornecedor_telefone">Telefone</label>
+              <input type="text" id="fornecedor_telefone" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="fornecedor_email">E-mail</label>
+              <input type="email" id="fornecedor_email" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="fornecedor_endereco">Endereço</label>
+              <textarea id="fornecedor_endereco" required></textarea>
+            </div>
+
+            <div class="linha-form">
+              <label for="fornecedor_ativo">Ativo</label>
+              <select id="fornecedor_ativo" required>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+
+            <div class="acoes-form">
+              <button type="submit" class="btn-primary" id="btn-fornecedor-salvar">Salvar Fornecedor</button>
+              <button type="button" class="btn-secondary" onclick="cancelarEdicaoFornecedor()" id="btn-fornecedor-cancelar" style="display:none;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="painel">
+          <div class="topo-lista">
+            <h2>Lista de Fornecedores</h2>
+            <button class="btn-success" onclick="carregarFornecedores()">Atualizar</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CNPJ</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Endereço</th>
+                <th>Ativo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-fornecedores"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="aba-produtos" class="aba">
+      <div class="grid-2">
+        <div class="painel">
+          <h2 id="titulo-form-produto">Cadastrar Produto</h2>
+          <form id="form-produto">
+            <input type="hidden" id="produto-id">
+
+            <div class="linha-form">
+              <label for="produto_nome">Nome</label>
+              <input type="text" id="produto_nome" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="produto_descricao">Descrição</label>
+              <textarea id="produto_descricao" required></textarea>
+            </div>
+
+            <div class="linha-form">
+              <label for="produto_codigo_barras">Código de Barras</label>
+              <input type="text" id="produto_codigo_barras" required>
+            </div>
+
+            <div class="linha-dupla">
+              <div class="linha-form">
+                <label for="produto_preco_custo">Preço de Custo</label>
+                <input type="number" id="produto_preco_custo" step="0.01" min="0" required>
+              </div>
+
+              <div class="linha-form">
+                <label for="produto_preco_venda">Preço de Venda</label>
+                <input type="number" id="produto_preco_venda" step="0.01" min="0" required>
+              </div>
+            </div>
+
+            <div class="linha-dupla">
+              <div class="linha-form">
+                <label for="produto_quantidade">Quantidade em Estoque</label>
+                <input type="number" id="produto_quantidade" min="0" required>
+              </div>
+
+              <div class="linha-form">
+                <label for="produto_minimo">Estoque Mínimo</label>
+                <input type="number" id="produto_minimo" min="0" required>
+              </div>
+            </div>
+
+            <div class="linha-form">
+              <label for="produto_categoria">Categoria</label>
+              <select id="produto_categoria" required></select>
+            </div>
+
+            <div class="linha-form">
+              <label for="produto_fornecedor">Fornecedor</label>
+              <select id="produto_fornecedor" required></select>
+            </div>
+
+            <div class="linha-form">
+              <label for="produto_ativo">Ativo</label>
+              <select id="produto_ativo" required>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
+            </div>
+
+            <div class="acoes-form">
+              <button type="submit" class="btn-primary" id="btn-produto-salvar">Salvar Produto</button>
+              <button type="button" class="btn-secondary" onclick="cancelarEdicaoProduto()" id="btn-produto-cancelar" style="display:none;">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="painel">
+          <div class="topo-lista">
+            <h2>Lista de Produtos</h2>
+            <button class="btn-success" onclick="carregarProdutos()">Atualizar</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Cód. Barras</th>
+                <th>Custo</th>
+                <th>Venda</th>
+                <th>Estoque</th>
+                <th>Mínimo</th>
+                <th>Categoria</th>
+                <th>Fornecedor</th>
+                <th>Ativo</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-produtos"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="aba-movimentacoes" class="aba">
+      <div class="grid-2">
+        <div class="painel">
+          <h2>Registrar Movimentação</h2>
+          <form id="form-movimentacao">
+            <div class="linha-form">
+              <label for="mov_produto">Produto</label>
+              <select id="mov_produto" required></select>
+            </div>
+
+            <div class="linha-form">
+              <label for="mov_tipo">Tipo de Movimentação</label>
+              <select id="mov_tipo" required>
+                <option value="">Selecione</option>
+                <option value="ENTRADA">ENTRADA</option>
+                <option value="SAIDA">SAIDA</option>
+              </select>
+            </div>
+
+            <div class="linha-form">
+              <label for="mov_quantidade">Quantidade</label>
+              <input type="number" id="mov_quantidade" min="1" required>
+            </div>
+
+            <div class="linha-form">
+              <label for="mov_observacao">Observação</label>
+              <textarea id="mov_observacao" required></textarea>
+            </div>
+
+            <div class="acoes-form">
+              <button type="submit" class="btn-primary">Registrar Movimentação</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="painel">
+          <div class="topo-lista">
+            <h2>Histórico de Movimentações</h2>
+            <button class="btn-success" onclick="carregarMovimentacoes()">Atualizar</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Produto</th>
+                <th>Tipo</th>
+                <th>Quantidade</th>
+                <th>Data</th>
+                <th>Observação</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-movimentacoes"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let categoriasCache = [];
+    let fornecedoresCache = [];
+    let produtosCache = [];
+    let estoqueBaixoCache = [];
+    let movimentacoesCache = [];
+
+    function mostrarMensagem(texto, tipo = 'sucesso') {
+      const el = document.getElementById('mensagem-global');
+      el.textContent = texto;
+      el.className = `mensagem-global ${tipo}`;
+      setTimeout(() => {
+        el.textContent = '';
+        el.className = 'mensagem-global';
+      }, 3500);
+    }
+
+    function abrirAba(nome, botao) {
+      document.querySelectorAll('.aba').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`aba-${nome}`).classList.add('active');
+      botao.classList.add('active');
+    }
+
+    function boolBadge(valor) {
+      return valor
+        ? '<span class="badge ok">Sim</span>'
+        : '<span class="badge inativo">Não</span>';
+    }
+
+    function statusEstoque(produto) {
+      const qtd = Number(produto.quantidade_estoque || 0);
+      const min = Number(produto.estoque_minimo || 0);
+      return qtd <= min ? 'baixo' : 'ok';
+    }
+
+    function statusBadge(produto) {
+      const stat = statusEstoque(produto);
+      return stat === 'baixo'
+        ? '<span class="badge baixo">Estoque baixo</span>'
+        : '<span class="badge ok">OK</span>';
+    }
+
+    function nomeCategoria(id) {
+      const item = categoriasCache.find(c => Number(c.id) === Number(id));
+      return item ? item.nome : '-';
+    }
+
+    function nomeFornecedor(id) {
+      const item = fornecedoresCache.find(f => Number(f.id) === Number(id));
+      return item ? item.nome : '-';
+    }
+
+    function nomeProduto(id) {
+      const item = produtosCache.find(p => Number(p.id) === Number(id));
+      return item ? item.nome : '-';
+    }
+
+    function popularSelectCategorias() {
+      const select = document.getElementById('produto_categoria');
+      select.innerHTML = '<option value="">Selecione</option>';
+      categoriasCache.forEach(c => {
+        select.innerHTML += `<option value="${c.id}">${c.nome}</option>`;
+      });
+    }
+
+    function popularSelectFornecedores() {
+      const select = document.getElementById('produto_fornecedor');
+      select.innerHTML = '<option value="">Selecione</option>';
+      fornecedoresCache.forEach(f => {
+        select.innerHTML += `<option value="${f.id}">${f.nome}</option>`;
+      });
+    }
+
+    function popularSelectProdutos() {
+      const select = document.getElementById('mov_produto');
+      select.innerHTML = '<option value="">Selecione</option>';
+      produtosCache.forEach(p => {
+        select.innerHTML += `<option value="${p.id}">${p.nome}</option>`;
+      });
+    }
+
+    function atualizarResumo() {
+      document.getElementById('resumo-produtos').textContent = produtosCache.length;
+      document.getElementById('resumo-categorias').textContent = categoriasCache.length;
+      document.getElementById('resumo-fornecedores').textContent = fornecedoresCache.length;
+      document.getElementById('resumo-baixo').textContent = estoqueBaixoCache.length;
+    }
+
+    async function carregarCategorias() {
+      try {
+        const res = await fetch('/categorias');
+        const dados = await res.json();
+        categoriasCache = Array.isArray(dados) ? dados : [];
+        popularSelectCategorias();
+
+        const tbody = document.getElementById('tabela-categorias');
+        tbody.innerHTML = '';
+
+        if (!categoriasCache.length) {
+          tbody.innerHTML = '<tr><td colspan="5">Nenhuma categoria cadastrada.</td></tr>';
+          atualizarResumo();
+          return;
+        }
+
+        categoriasCache.forEach(c => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${c.id}</td>
+              <td>${c.nome ?? '-'}</td>
+              <td>${c.descricao ?? '-'}</td>
+              <td>${boolBadge(c.ativo)}</td>
+              <td>
+                <div class="acoes-tabela">
+                  <button class="btn-warning" onclick='editarCategoria(${JSON.stringify(c)})'>Editar</button>
+                  <button class="btn-danger" onclick="excluirCategoria(${c.id})">Excluir</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+
+        atualizarResumo();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem('Erro ao carregar categorias.', 'erro');
+      }
+    }
+
+    function editarCategoria(categoria) {
+      document.getElementById('categoria-id').value = categoria.id;
+      document.getElementById('categoria_nome').value = categoria.nome ?? '';
+      document.getElementById('categoria_descricao').value = categoria.descricao ?? '';
+      document.getElementById('categoria_ativo').value = String(categoria.ativo);
+      document.getElementById('titulo-form-categoria').textContent = 'Editar Categoria';
+      document.getElementById('btn-categoria-salvar').textContent = 'Atualizar Categoria';
+      document.getElementById('btn-categoria-cancelar').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelarEdicaoCategoria() {
+      document.getElementById('categoria-id').value = '';
+      document.getElementById('categoria_nome').value = '';
+      document.getElementById('categoria_descricao').value = '';
+      document.getElementById('categoria_ativo').value = 'true';
+      document.getElementById('titulo-form-categoria').textContent = 'Cadastrar Categoria';
+      document.getElementById('btn-categoria-salvar').textContent = 'Salvar Categoria';
+      document.getElementById('btn-categoria-cancelar').style.display = 'none';
+    }
+
+    async function excluirCategoria(id) {
+      if (!confirm(`Deseja excluir a categoria ${id}?`)) return;
+      try {
+        const res = await fetch(`/categorias/${id}`, { method: 'DELETE' });
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao excluir categoria.');
+        mostrarMensagem(dados.mensagem || 'Categoria excluída com sucesso.');
+        await carregarCategorias();
+        await carregarProdutos();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao excluir categoria.', 'erro');
+      }
+    }
+
+    async function carregarFornecedores() {
+      try {
+        const res = await fetch('/fornecedores');
+        const dados = await res.json();
+        fornecedoresCache = Array.isArray(dados) ? dados : [];
+        popularSelectFornecedores();
+
+        const tbody = document.getElementById('tabela-fornecedores');
+        tbody.innerHTML = '';
+
+        if (!fornecedoresCache.length) {
+          tbody.innerHTML = '<tr><td colspan="8">Nenhum fornecedor cadastrado.</td></tr>';
+          atualizarResumo();
+          return;
+        }
+
+        fornecedoresCache.forEach(f => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${f.id}</td>
+              <td>${f.nome ?? '-'}</td>
+              <td>${f.cnpj ?? '-'}</td>
+              <td>${f.telefone ?? '-'}</td>
+              <td>${f.email ?? '-'}</td>
+              <td>${f.endereco ?? '-'}</td>
+              <td>${boolBadge(f.ativo)}</td>
+              <td>
+                <div class="acoes-tabela">
+                  <button class="btn-warning" onclick='editarFornecedor(${JSON.stringify(f)})'>Editar</button>
+                  <button class="btn-danger" onclick="excluirFornecedor(${f.id})">Excluir</button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+
+        atualizarResumo();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem('Erro ao carregar fornecedores.', 'erro');
+      }
+    }
+
+    function editarFornecedor(fornecedor) {
+      document.getElementById('fornecedor-id').value = fornecedor.id;
+      document.getElementById('fornecedor_nome').value = fornecedor.nome ?? '';
+      document.getElementById('fornecedor_cnpj').value = fornecedor.cnpj ?? '';
+      document.getElementById('fornecedor_telefone').value = fornecedor.telefone ?? '';
+      document.getElementById('fornecedor_email').value = fornecedor.email ?? '';
+      document.getElementById('fornecedor_endereco').value = fornecedor.endereco ?? '';
+      document.getElementById('fornecedor_ativo').value = String(fornecedor.ativo);
+      document.getElementById('titulo-form-fornecedor').textContent = 'Editar Fornecedor';
+      document.getElementById('btn-fornecedor-salvar').textContent = 'Atualizar Fornecedor';
+      document.getElementById('btn-fornecedor-cancelar').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelarEdicaoFornecedor() {
+      document.getElementById('fornecedor-id').value = '';
+      document.getElementById('fornecedor_nome').value = '';
+      document.getElementById('fornecedor_cnpj').value = '';
+      document.getElementById('fornecedor_telefone').value = '';
+      document.getElementById('fornecedor_email').value = '';
+      document.getElementById('fornecedor_endereco').value = '';
+      document.getElementById('fornecedor_ativo').value = 'true';
+      document.getElementById('titulo-form-fornecedor').textContent = 'Cadastrar Fornecedor';
+      document.getElementById('btn-fornecedor-salvar').textContent = 'Salvar Fornecedor';
+      document.getElementById('btn-fornecedor-cancelar').style.display = 'none';
+    }
+
+    async function excluirFornecedor(id) {
+      if (!confirm(`Deseja excluir o fornecedor ${id}?`)) return;
+      try {
+        const res = await fetch(`/fornecedores/${id}`, { method: 'DELETE' });
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao excluir fornecedor.');
+        mostrarMensagem(dados.mensagem || 'Fornecedor excluído com sucesso.');
+        await carregarFornecedores();
+        await carregarProdutos();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao excluir fornecedor.', 'erro');
+      }
+    }
+
+    async function carregarProdutos() {
+      try {
+        const res = await fetch('/produtos');
+        const dados = await res.json();
+        produtosCache = Array.isArray(dados) ? dados : [];
+        popularSelectProdutos();
+
+        const tbody = document.getElementById('tabela-produtos');
+        const tbodyDash = document.getElementById('dashboard-produtos');
+        tbody.innerHTML = '';
+        tbodyDash.innerHTML = '';
+
+        if (!produtosCache.length) {
+          tbody.innerHTML = '<tr><td colspan="12">Nenhum produto cadastrado.</td></tr>';
+          tbodyDash.innerHTML = '<tr><td colspan="9">Nenhum produto cadastrado.</td></tr>';
+          atualizarResumo();
+          return;
+        }
+
+        produtosCache.forEach(p => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${p.id}</td>
+              <td>${p.nome ?? '-'}</td>
+              <td>${p.codigo_barras ?? '-'}</td>
+              <td>${p.preco_custo ?? 0}</td>
+              <td>${p.preco_venda ?? 0}</td>
+              <td>${p.quantidade_estoque ?? 0}</td>
+              <td>${p.estoque_minimo ?? 0}</td>
+              <td>${nomeCategoria(p.id_categoria)}</td>
+              <td>${nomeFornecedor(p.id_fornecedor)}</td>
+              <td>${boolBadge(p.ativo)}</td>
+              <td>${statusBadge(p)}</td>
+              <td>
+                <div class="acoes-tabela">
+                  <button class="btn-warning" onclick='editarProduto(${JSON.stringify(p)})'>Editar</button>
+                  <button class="btn-danger" onclick="excluirProduto(${p.id})">Excluir</button>
+                </div>
+              </td>
+            </tr>
+          `;
+
+          tbodyDash.innerHTML += `
+            <tr>
+              <td>${p.id}</td>
+              <td>${p.nome ?? '-'}</td>
+              <td>${p.codigo_barras ?? '-'}</td>
+              <td>${nomeCategoria(p.id_categoria)}</td>
+              <td>${nomeFornecedor(p.id_fornecedor)}</td>
+              <td>${p.quantidade_estoque ?? 0}</td>
+              <td>${p.estoque_minimo ?? 0}</td>
+              <td>${boolBadge(p.ativo)}</td>
+              <td>${statusBadge(p)}</td>
+            </tr>
+          `;
+        });
+
+        atualizarResumo();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem('Erro ao carregar produtos.', 'erro');
+      }
+    }
+
+    function editarProduto(produto) {
+      document.getElementById('produto-id').value = produto.id;
+      document.getElementById('produto_nome').value = produto.nome ?? '';
+      document.getElementById('produto_descricao').value = produto.descricao ?? '';
+      document.getElementById('produto_codigo_barras').value = produto.codigo_barras ?? '';
+      document.getElementById('produto_preco_custo').value = produto.preco_custo ?? 0;
+      document.getElementById('produto_preco_venda').value = produto.preco_venda ?? 0;
+      document.getElementById('produto_quantidade').value = produto.quantidade_estoque ?? 0;
+      document.getElementById('produto_minimo').value = produto.estoque_minimo ?? 0;
+      document.getElementById('produto_categoria').value = produto.id_categoria ?? '';
+      document.getElementById('produto_fornecedor').value = produto.id_fornecedor ?? '';
+      document.getElementById('produto_ativo').value = String(produto.ativo);
+      document.getElementById('titulo-form-produto').textContent = 'Editar Produto';
+      document.getElementById('btn-produto-salvar').textContent = 'Atualizar Produto';
+      document.getElementById('btn-produto-cancelar').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelarEdicaoProduto() {
+      document.getElementById('produto-id').value = '';
+      document.getElementById('produto_nome').value = '';
+      document.getElementById('produto_descricao').value = '';
+      document.getElementById('produto_codigo_barras').value = '';
+      document.getElementById('produto_preco_custo').value = '';
+      document.getElementById('produto_preco_venda').value = '';
+      document.getElementById('produto_quantidade').value = '';
+      document.getElementById('produto_minimo').value = '';
+      document.getElementById('produto_categoria').value = '';
+      document.getElementById('produto_fornecedor').value = '';
+      document.getElementById('produto_ativo').value = 'true';
+      document.getElementById('titulo-form-produto').textContent = 'Cadastrar Produto';
+      document.getElementById('btn-produto-salvar').textContent = 'Salvar Produto';
+      document.getElementById('btn-produto-cancelar').style.display = 'none';
+    }
+
+    async function excluirProduto(id) {
+      if (!confirm(`Deseja excluir o produto ${id}?`)) return;
+      try {
+        const res = await fetch(`/produtos/${id}`, { method: 'DELETE' });
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao excluir produto.');
+        mostrarMensagem(dados.mensagem || 'Produto excluído com sucesso.');
+        await carregarProdutos();
+        await carregarEstoqueBaixo();
+        await carregarMovimentacoes();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao excluir produto.', 'erro');
+      }
+    }
+
+    async function carregarEstoqueBaixo() {
+      try {
+        const res = await fetch('/produtos/estoque-baixo');
+        const dados = await res.json();
+        estoqueBaixoCache = Array.isArray(dados) ? dados : [];
+
+        const area = document.getElementById('lista-estoque-baixo');
+        area.innerHTML = '';
+
+        if (!estoqueBaixoCache.length) {
+          area.innerHTML = '<p class="muted">Nenhum produto com estoque baixo.</p>';
+          atualizarResumo();
+          return;
+        }
+
+        estoqueBaixoCache.forEach(p => {
+          area.innerHTML += `
+            <div class="alerta-item">
+              ${p.nome} - Estoque atual: ${p.quantidade_estoque} | Mínimo: ${p.estoque_minimo}
+            </div>
+          `;
+        });
+
+        atualizarResumo();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem('Erro ao carregar alerta de estoque baixo.', 'erro');
+      }
+    }
+
+    async function carregarMovimentacoes() {
+      try {
+        const res = await fetch('/movimentacoes');
+        const dados = await res.json();
+        movimentacoesCache = Array.isArray(dados) ? dados : [];
+
+        const tbody = document.getElementById('tabela-movimentacoes');
+        tbody.innerHTML = '';
+
+        if (!movimentacoesCache.length) {
+          tbody.innerHTML = '<tr><td colspan="6">Nenhuma movimentação registrada.</td></tr>';
+          return;
+        }
+
+        movimentacoesCache.forEach(m => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${m.id}</td>
+              <td>${nomeProduto(m.id_produto)}</td>
+              <td>${m.tipo_movimentacao ?? '-'}</td>
+              <td>${m.quantidade ?? 0}</td>
+              <td>${m.data_movimentacao ?? '-'}</td>
+              <td>${m.observacao ?? '-'}</td>
+            </tr>
+          `;
+        });
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem('Erro ao carregar movimentações.', 'erro');
+      }
+    }
+
+    document.getElementById('form-categoria').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const id = document.getElementById('categoria-id').value.trim();
+
+      const payload = {
+        nome: document.getElementById('categoria_nome').value.trim(),
+        descricao: document.getElementById('categoria_descricao').value.trim(),
+        ativo: document.getElementById('categoria_ativo').value === 'true'
+      };
+
+      try {
+        let res;
+        if (id) {
+          res = await fetch(`/categorias/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch('/categorias', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao salvar categoria.');
+        mostrarMensagem(dados.mensagem || (id ? 'Categoria atualizada com sucesso.' : 'Categoria cadastrada com sucesso.'));
+        cancelarEdicaoCategoria();
+        await carregarCategorias();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao salvar categoria.', 'erro');
+      }
+    });
+
+    document.getElementById('form-fornecedor').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const id = document.getElementById('fornecedor-id').value.trim();
+
+      const payload = {
+        nome: document.getElementById('fornecedor_nome').value.trim(),
+        cnpj: document.getElementById('fornecedor_cnpj').value.trim(),
+        telefone: document.getElementById('fornecedor_telefone').value.trim(),
+        email: document.getElementById('fornecedor_email').value.trim(),
+        endereco: document.getElementById('fornecedor_endereco').value.trim(),
+        ativo: document.getElementById('fornecedor_ativo').value === 'true'
+      };
+
+      try {
+        let res;
+        if (id) {
+          res = await fetch(`/fornecedores/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch('/fornecedores', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao salvar fornecedor.');
+        mostrarMensagem(dados.mensagem || (id ? 'Fornecedor atualizado com sucesso.' : 'Fornecedor cadastrado com sucesso.'));
+        cancelarEdicaoFornecedor();
+        await carregarFornecedores();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao salvar fornecedor.', 'erro');
+      }
+    });
+
+    document.getElementById('form-produto').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const id = document.getElementById('produto-id').value.trim();
+
+      const payload = {
+        nome: document.getElementById('produto_nome').value.trim(),
+        descricao: document.getElementById('produto_descricao').value.trim(),
+        codigo_barras: document.getElementById('produto_codigo_barras').value.trim(),
+        preco_custo: Number(document.getElementById('produto_preco_custo').value),
+        preco_venda: Number(document.getElementById('produto_preco_venda').value),
+        quantidade_estoque: Number(document.getElementById('produto_quantidade').value),
+        estoque_minimo: Number(document.getElementById('produto_minimo').value),
+        id_categoria: Number(document.getElementById('produto_categoria').value),
+        id_fornecedor: Number(document.getElementById('produto_fornecedor').value),
+        ativo: document.getElementById('produto_ativo').value === 'true'
+      };
+
+      try {
+        let res;
+        if (id) {
+          res = await fetch(`/produtos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch('/produtos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao salvar produto.');
+        mostrarMensagem(dados.mensagem || (id ? 'Produto atualizado com sucesso.' : 'Produto cadastrado com sucesso.'));
+        cancelarEdicaoProduto();
+        await carregarProdutos();
+        await carregarEstoqueBaixo();
+        await carregarMovimentacoes();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao salvar produto.', 'erro');
+      }
+    });
+
+    document.getElementById('form-movimentacao').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+
+      const payload = {
+        id_produto: Number(document.getElementById('mov_produto').value),
+        tipo_movimentacao: document.getElementById('mov_tipo').value,
+        quantidade: Number(document.getElementById('mov_quantidade').value),
+        observacao: document.getElementById('mov_observacao').value.trim()
+      };
+
+      try {
+        const res = await fetch('/movimentacoes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const dados = await res.json();
+        if (!res.ok) throw new Error(dados.mensagem || 'Erro ao registrar movimentação.');
+
+        mostrarMensagem(dados.mensagem || 'Movimentação registrada com sucesso.');
+        document.getElementById('form-movimentacao').reset();
+        await carregarProdutos();
+        await carregarMovimentacoes();
+        await carregarEstoqueBaixo();
+      } catch (e) {
+        console.error(e);
+        mostrarMensagem(e.message || 'Erro ao registrar movimentação.', 'erro');
+      }
+    });
+
+    async function carregarTudo() {
+      await carregarCategorias();
+      await carregarFornecedores();
+      await carregarProdutos();
+      await carregarEstoqueBaixo();
+      await carregarMovimentacoes();
+    }
+
+    carregarTudo();
+  </script>
+</body>
+</html>
