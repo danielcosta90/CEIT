@@ -10,6 +10,12 @@ Disponibilizar uma solução simples e eficiente para o gerenciamento de estoque
 
 ## Funcionalidades
 
+### Categorias
+- Cadastro de categorias;
+- Consulta de categorias;
+- Atualização de categorias;
+- Exclusão de categorias.
+
 ### Fornecedores
 - Cadastro de fornecedores;
 - Consulta de fornecedores;
@@ -74,6 +80,11 @@ CEIT/
 
 ## Modelo de Dados
 
+### Categoria
+- id
+- nome
+- descricao
+
 ### Fornecedor
 - id
 - nome
@@ -110,7 +121,7 @@ CEIT/
 ### Clone o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/ceit.git
+git clone https://github.com/danielcosta90/CEIT.git
 ```
 
 ### Acesse a pasta do projeto
@@ -168,6 +179,16 @@ flask run
 
 ## Endpoints Principais
 
+### Categorias
+
+| Método | Endpoint |
+|---------|----------|
+| POST | /categorias |
+| GET | /categorias |
+| GET | /categorias/{id} |
+| PUT | /categorias/{id} |
+| DELETE | /categorias/{id} |
+
 ### Fornecedores
 
 | Método | Endpoint |
@@ -219,7 +240,10 @@ flask run
 Projeto desenvolvido para fins acadêmicos.
 
 - Daniel S. Costa
-- Demais integrantes do grupo
+- Felipe Carlos D. Machado
+- João Gustavo M. de Aguiar
+- Guilherme V. Teixeira
+- Andre Junior Divino
 
 ## Status do Projeto
 
