@@ -41,6 +41,14 @@ Disponibilizar uma solução simples e eficiente para o gerenciamento de estoque
 - Identificação de produtos com baixo estoque;
 - Histórico de movimentações.
 
+## Requisitos para rodar sistema
+
+- Python 3.10 ou superior
+- PostgreSQL 14 ou superior
+- pip
+- Git
+- Navegador web
+
 ## Tecnologias Utilizadas
 
 ### Backend
@@ -61,6 +69,15 @@ Disponibilizar uma solução simples e eficiente para o gerenciamento de estoque
 - Git
 - GitHub
 - Postman
+
+## Ambiente utilizado no desenvolvimento
+
+O projeto foi desenvolvido utilizando:
+- Visual Studio Code
+- Python
+- PostgreSQL
+
+Embora tenha sido desenvolvido no VS Code, o sistema pode ser executado em qualquer ambiente compatível com Python e PostgreSQL.
 
 ## Estrutura do Projeto
 
@@ -119,19 +136,16 @@ CEIT/
 ## Instalação
 
 ### Clone o repositório
-
 ```bash
 git clone https://github.com/danielcosta90/CEIT.git
 ```
 
 ### Acesse a pasta do projeto
-
 ```bash
 cd ceit
 ```
 
 ### Instale as dependências
-
 ```bash
 pip install -r requirements.txt
 ```
@@ -141,7 +155,6 @@ pip install -r requirements.txt
 O projeto utiliza PostgreSQL como sistema gerenciador de banco de dados.
 
 ### Criar o banco de dados
-
 Execute o comando abaixo no PostgreSQL:
 
 ```sql
@@ -149,8 +162,9 @@ CREATE DATABASE ceit;
 ```
 
 ### Restaurar a estrutura do banco
-
 Após criar o banco, execute o script disponibilizado na pasta `sql` para criar as tabelas, relacionamentos, funções e demais objetos necessários ao funcionamento da aplicação.
+
+!!!! O arquivo `sql/ceit.sql` contém a estrutura completa do banco de dados, incluindo tabelas, relacionamentos, funções, triggers e dados iniciais. !!!!
 
 Exemplo:
 
@@ -159,14 +173,12 @@ psql -U postgres -d ceit -f sql/ceit.sql
 ```
 
 ### Configurar a conexão
-
 Verifique as configurações de conexão com o PostgreSQL no arquivo da aplicação e ajuste os parâmetros conforme o seu ambiente:
 
 ```python
 DATABASE_URL = "postgresql://usuario:senha@localhost:5432/ceit"
 ```
 ### Execute o projeto
-
 ```bash
 python app.py
 ```
@@ -180,7 +192,6 @@ flask run
 ## Endpoints Principais
 
 ### Categorias
-
 | Método | Endpoint |
 |---------|----------|
 | POST | /categorias |
@@ -190,7 +201,6 @@ flask run
 | DELETE | /categorias/{id} |
 
 ### Fornecedores
-
 | Método | Endpoint |
 |---------|----------|
 | POST | /fornecedores |
@@ -200,7 +210,6 @@ flask run
 | DELETE | /fornecedores/{id} |
 
 ### Produtos
-
 | Método | Endpoint |
 |---------|----------|
 | POST | /produtos |
@@ -210,11 +219,144 @@ flask run
 | DELETE | /produtos/{id} |
 
 ### Movimentações
-
 | Método | Endpoint |
 |---------|----------|
 | POST | /movimentacoes |
 | GET | /movimentacoes |
+
+## Exemplos de Teste das Requisições
+
+Os testes podem ser realizados pelo Postman, Insomnia ou outra ferramenta de requisições HTTP.
+
+### Categorias
+
+#### Cadastrar categoria
+**POST** `/categorias`
+```json
+{
+  "nome": "Periféricos",
+  "descricao": "Produtos como mouse, teclado e headset"
+}
+```
+
+#### Atualizar categoria
+**PUT** `/categorias/1`
+```json
+{
+  "nome": "Periféricos e Acessórios",
+  "descricao": "Itens utilizados como acessórios de informática"
+}
+```
+
+---
+
+### Fornecedores
+
+#### Cadastrar fornecedor
+**POST** `/fornecedores`
+```json
+{
+  "nome": "Tech Distribuidora",
+  "telefone": "(62) 99999-9999",
+  "email": "contato@techdistribuidora.com",
+  "endereco": "Goiânia - GO"
+}
+```
+
+#### Atualizar fornecedor
+**PUT** `/fornecedores/1`
+```json
+{
+  "nome": "Tech Distribuidora LTDA",
+  "telefone": "(62) 98888-8888",
+  "email": "comercial@techdistribuidora.com",
+  "endereco": "Aparecida de Goiânia - GO"
+}
+```
+
+---
+
+### Produtos
+
+#### Cadastrar produto
+**POST** `/produtos`
+```json
+{
+  "nome": "Mouse Gamer",
+  "categoria_id": 1,
+  "fornecedor_id": 1,
+  "preco": 89.90,
+  "quantidade_estoque": 10
+}
+```
+
+#### Atualizar produto
+**PUT** `/produtos/1`
+```json
+{
+  "nome": "Mouse Gamer RGB",
+  "categoria_id": 1,
+  "fornecedor_id": 1,
+  "preco": 99.90,
+  "quantidade_estoque": 15
+}
+```
+
+---
+
+### Movimentações
+
+#### Registrar entrada de estoque
+**POST** `/movimentacoes`
+```json
+{
+  "produto_id": 1,
+  "tipo_movimento": "entrada",
+  "quantidade": 5
+}
+```
+
+#### Registrar saída de estoque
+**POST** `/movimentacoes`
+```json
+{
+  "produto_id": 1,
+  "tipo_movimento": "saida",
+  "quantidade": 2
+}
+```
+
+#### Registrar reposição de estoque
+**POST** `/movimentacoes`
+```json
+{
+  "produto_id": 1,
+  "tipo_movimento": "reposicao",
+  "quantidade": 10
+}
+```
+
+---
+
+### Consultas
+
+#### Listar categorias
+**GET** `/categorias`
+
+#### Listar fornecedores
+**GET** `/fornecedores`
+
+#### Listar produtos
+**GET** `/produtos`
+
+#### Listar movimentações
+**GET** `/movimentacoes`
+
+#### Buscar produto por nome
+**GET** `/produtos/buscar?nome=mouse`
+
+#### Consultar produtos com estoque baixo
+**GET** `/produtos/estoque-baixo`
 
 ## Funcionalidades Implementadas
 
@@ -240,6 +382,7 @@ flask run
 Projeto desenvolvido para fins acadêmicos.
 
 - Daniel S. Costa
+   qualquer duvida estou a diposição: 62982845320
 - Felipe Carlos D. Machado
 - João Gustavo M. de Aguiar
 - Guilherme V. Teixeira
