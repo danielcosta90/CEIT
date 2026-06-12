@@ -1,0 +1,230 @@
+# C.E.I.T. - Controle de Estoque de Informática e Tecnologia
+
+## Sobre o Projeto
+
+O C.E.I.T. é um sistema de controle de estoque desenvolvido para gerenciar produtos, fornecedores e movimentações de entrada e saída. O projeto foi criado com fins acadêmicos, aplicando conceitos de desenvolvimento web, banco de dados e engenharia de software.
+
+## Objetivo
+
+Disponibilizar uma solução simples e eficiente para o gerenciamento de estoque, permitindo o acompanhamento de produtos, movimentações e níveis de estoque em tempo real.
+
+## Funcionalidades
+
+### Fornecedores
+- Cadastro de fornecedores;
+- Consulta de fornecedores;
+- Atualização de dados;
+- Exclusão de registros.
+
+### Produtos
+- Cadastro de produtos;
+- Consulta de produtos;
+- Atualização de informações;
+- Exclusão de produtos;
+- Controle de quantidade em estoque.
+
+### Movimentações
+- Registro de entradas;
+- Registro de saídas;
+- Registro de reposições;
+- Atualização automática do estoque.
+
+### Consultas e Relatórios
+- Busca de produtos por nome;
+- Consulta de estoque disponível;
+- Identificação de produtos com baixo estoque;
+- Histórico de movimentações.
+
+## Tecnologias Utilizadas
+
+### Backend
+- Python
+- Flask
+- SQLAlchemy
+
+### Banco de Dados
+- PostgreSQL
+
+### Frontend
+- HTML5
+- CSS3
+- JavaScript
+
+### Ferramentas
+- Visual Studio Code
+- Git
+- GitHub
+- Postman
+
+## Estrutura do Projeto
+
+```text
+CEIT/
+│
+├── app.py
+├── models/
+├── routes/
+├── static/
+├── templates/
+├── sql/
+│   └── ceit.sql
+├── README.md
+└── requirements.txt
+```
+
+## Modelo de Dados
+
+### Fornecedor
+- id
+- nome
+- telefone
+- email
+- endereco
+
+### Produto
+- id
+- nome
+- categoria
+- preco
+- quantidade_estoque
+- fornecedor_id
+
+### Movimentacao
+- id
+- tipo_movimento
+- quantidade
+- data_movimento
+- produto_id
+
+## Regras de Negócio
+
+- Todo produto deve estar vinculado a um fornecedor.
+- Entradas aumentam automaticamente o estoque.
+- Saídas reduzem automaticamente o estoque.
+- Reposições aumentam automaticamente o estoque.
+- O sistema não permite estoque negativo.
+- Produtos com quantidade abaixo do limite definido são considerados com estoque baixo.
+
+## Instalação
+
+### Clone o repositório
+
+```bash
+git clone https://github.com/seu-usuario/ceit.git
+```
+
+### Acesse a pasta do projeto
+
+```bash
+cd ceit
+```
+
+### Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+## Configuração do Banco de Dados
+
+O projeto utiliza PostgreSQL como sistema gerenciador de banco de dados.
+
+### Criar o banco de dados
+
+Execute o comando abaixo no PostgreSQL:
+
+```sql
+CREATE DATABASE ceit;
+```
+
+### Restaurar a estrutura do banco
+
+Após criar o banco, execute o script disponibilizado na pasta `sql` para criar as tabelas, relacionamentos, funções e demais objetos necessários ao funcionamento da aplicação.
+
+Exemplo:
+
+```bash
+psql -U postgres -d ceit -f sql/ceit.sql
+```
+
+### Configurar a conexão
+
+Verifique as configurações de conexão com o PostgreSQL no arquivo da aplicação e ajuste os parâmetros conforme o seu ambiente:
+
+```python
+DATABASE_URL = "postgresql://usuario:senha@localhost:5432/ceit"
+```
+### Execute o projeto
+
+```bash
+python app.py
+```
+
+ou
+
+```bash
+flask run
+```
+
+## Endpoints Principais
+
+### Fornecedores
+
+| Método | Endpoint |
+|---------|----------|
+| POST | /fornecedores |
+| GET | /fornecedores |
+| GET | /fornecedores/{id} |
+| PUT | /fornecedores/{id} |
+| DELETE | /fornecedores/{id} |
+
+### Produtos
+
+| Método | Endpoint |
+|---------|----------|
+| POST | /produtos |
+| GET | /produtos |
+| GET | /produtos/{id} |
+| PUT | /produtos/{id} |
+| DELETE | /produtos/{id} |
+
+### Movimentações
+
+| Método | Endpoint |
+|---------|----------|
+| POST | /movimentacoes |
+| GET | /movimentacoes |
+
+## Funcionalidades Implementadas
+
+- CRUD completo de fornecedores;
+- CRUD completo de produtos;
+- Controle de movimentações;
+- Atualização automática do estoque;
+- Busca de produtos;
+- Consulta de estoque baixo;
+- Integração entre frontend e backend;
+- Banco de dados relacional com PostgreSQL.
+
+## Melhorias Futuras
+
+- Controle de usuários e permissões;
+- Dashboard gerencial;
+- Relatórios em PDF;
+- Exportação para Excel;
+- Indicadores e gráficos.
+
+## Equipe
+
+Projeto desenvolvido para fins acadêmicos.
+
+- Daniel S. Costa
+- Demais integrantes do grupo
+
+## Status do Projeto
+
+Projeto funcional e em constante evolução.
+
+## Licença
+
+Este projeto foi desenvolvido exclusivamente para fins acadêmicos e educacionais.

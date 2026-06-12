@@ -98,7 +98,6 @@ def cadastrar_categoria():
             "mensagem": str(e)
         }), 500
 
-
 @app.route("/categorias/<int:id>", methods=["PUT"])
 def atualizar_categoria(id):
     try:
@@ -151,7 +150,6 @@ def atualizar_categoria(id):
             "status": "erro",
             "mensagem": str(e)
         }), 500
-
 
 @app.route("/categorias/<int:id>", methods=["DELETE"])
 def deletar_categoria(id):
